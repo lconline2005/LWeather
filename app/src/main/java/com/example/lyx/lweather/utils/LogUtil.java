@@ -3,7 +3,7 @@ package com.example.lyx.lweather.utils;
 import android.util.Log;
 
 /**
- * Created by Administrator on 2017/6/13.
+ * Created by Administrator on 2017/6/13. Log处理
  */
 
 public class LogUtil {
@@ -14,7 +14,7 @@ public class LogUtil {
     public final static int ERROR=5;
     public final static int NOTHING=6;
 
-    public static int LEVEL=VERBOSE;
+    public static int LEVEL=DEBUG;
 
     public static void v(String tag,String msg) {
         if (LEVEL <= VERBOSE) {
@@ -23,22 +23,22 @@ public class LogUtil {
     }
     public static void d(String tag,String msg) {
         if (LEVEL <= DEBUG) {
-            Log.v(tag,msg);
+            Log.d(tag,msg);
         }
     }
     public static void i(String tag,String msg) {
         if (LEVEL <= INFO) {
-            Log.v(tag,msg);
+            Log.i(tag,msg);
         }
     }
     public static void w(String tag,String msg) {
         if (LEVEL <= WARN) {
-            Log.v(tag,msg);
+            Log.w(tag,msg);
         }
     }
     public static void e(String tag,String msg) {
         if (LEVEL <= ERROR) {
-            Log.v(tag,msg);
+            Log.e(tag,msg);
         }
     }
 }
