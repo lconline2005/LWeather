@@ -5,6 +5,7 @@ package com.example.lyx.lweather.network.entity;
  */
 
 public class CityEntity {
+
     /**
      * id : 10
      * name : 哈尔滨

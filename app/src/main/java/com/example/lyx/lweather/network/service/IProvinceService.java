@@ -1,5 +1,6 @@
 package com.example.lyx.lweather.network.service;
 
+import com.example.lyx.lweather.dbase.Province;
 import com.example.lyx.lweather.network.entity.ProvinceEntity;
 
 import java.util.List;
@@ -14,5 +15,5 @@ import retrofit2.http.GET;
 public interface IProvinceService {
     @GET("china")
 //    Call<List<ProvinceEntity>> getProvince();
-    Call<String> getProvince();
+    Call<List<ProvinceEntity>> getProvince();
 }

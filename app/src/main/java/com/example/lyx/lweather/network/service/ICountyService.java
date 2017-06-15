@@ -15,5 +15,5 @@ import retrofit2.http.Query;
 
 public interface ICountyService {
     @GET("china/{provinceId}/{cityId}")
-    Call<List<CountyEntity>> getCounty(@Query("provinceId") int provinceid, @Query("cityId") int cityid);
+    Call<List<CountyEntity>> getCounty(@Path("provinceId") int provinceid, @Path("cityId") int cityid);
 }
