@@ -14,6 +14,5 @@ import retrofit2.http.GET;
 
 public interface IProvinceService {
     @GET("china")
-//    Call<List<ProvinceEntity>> getProvince();
     Call<List<ProvinceEntity>> getProvince();
 }
