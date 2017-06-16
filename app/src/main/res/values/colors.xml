@@ -3,5 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="toolbarbackground">#6bb5ff</color>
+    <color name="toolbarbackground">#7dd3fa</color>
+    <color name="weatherbackground">#7dd3fa</color>
 </resources>

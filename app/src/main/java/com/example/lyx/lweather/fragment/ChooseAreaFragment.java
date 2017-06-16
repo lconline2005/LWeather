@@ -2,6 +2,7 @@ package com.example.lyx.lweather.fragment;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lyx.lweather.R;
+import com.example.lyx.lweather.activity.WeatherActivity;
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
 import com.example.lyx.lweather.dbase.Province;
@@ -106,6 +108,12 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCity = cityList.get(position);
                     queryCounties();
                     LogUtil.d(TAG, "==>" + selectedCity.getCityName() + selectedCity.getCityCode() + currentLevel);
+                }else if (currentLevel==LEVEL_COUNTY){
+                    String weatherId=countyList.get(position).getWeatherID();
+                    Intent intent=new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
 
             }
@@ -122,31 +130,6 @@ public class ChooseAreaFragment extends Fragment {
         });
     }
 
-//    public String Retro() {
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(Params.BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-//        IProvinceService IProvinceService = retrofit.create(IProvinceService.class);
-//        Call<ProvinceEntity> call = IProvinceService.getProvince();
-//        call.enqueue(new retrofit2.Callback<ProvinceEntity>() {
-//            @Override
-//            public void onResponse(Call<ProvinceEntity> call, retrofit2.Response<ProvinceEntity> response) {
-//                String result = response.body().toString();
-//                LogUtil.d(TAG, "retrofit==>" + result);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ProvinceEntity> call, Throwable t) {
-//                t.printStackTrace();
-//            }
-//
-//        });
-
-//        return null;
-//    }
-
-//
     //    /*查询所有province*/
     private void queryProvinces() {
         titletext.setText("中国");
