@@ -88,7 +88,6 @@ public class ChooseAreaFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.list_view);
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, dataList);
         listView.setAdapter(adapter);
-//        Retro();
         return view;
     }
 
@@ -109,9 +108,11 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounties();
                     LogUtil.d(TAG, "==>" + selectedCity.getCityName() + selectedCity.getCityCode() + currentLevel);
                 }else if (currentLevel==LEVEL_COUNTY){
+                    selectedCounty = countyList.get(position);
                     String weatherId=countyList.get(position).getWeatherID();
                     Intent intent=new Intent(getActivity(), WeatherActivity.class);
                     intent.putExtra("weather_id",weatherId);
+                    intent.putExtra("lastcountyid",selectedCounty.getWeatherID());
                     startActivity(intent);
                     getActivity().finish();
                 }
