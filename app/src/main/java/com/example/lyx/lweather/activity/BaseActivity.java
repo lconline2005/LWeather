@@ -31,7 +31,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    //隐藏透明状态栏
+//    //隐藏透明状态栏
 //    @Override
 //    public void onWindowFocusChanged(boolean hasFocus) {
 //        super.onWindowFocusChanged(hasFocus);
@@ -47,13 +47,13 @@ public class BaseActivity extends AppCompatActivity {
 //        }
 //    }
 
+//
+//    *
+//     * 设置状态栏颜色
+//     *
+//     * @param activity 需要设置的activity
+//     * @param color    状态栏颜色值
 
-    /**
-     * 设置状态栏颜色
-     *
-     * @param activity 需要设置的activity
-     * @param color    状态栏颜色值
-     */
     public static void setColor(Activity activity, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // 设置状态栏透明
@@ -69,13 +69,13 @@ public class BaseActivity extends AppCompatActivity {
             rootView.setClipToPadding(true);
         }
     }
-    /**
-     * 生成一个和状态栏大小相同的矩形条
-     *
-     * @param activity 需要设置的activity
-     * @param color    状态栏颜色值
-     * @return 状态栏矩形条
-     */
+//    *
+//     * 生成一个和状态栏大小相同的矩形条
+//     *
+//     * @param activity 需要设置的activity
+//     * @param color    状态栏颜色值
+//     * @return 状态栏矩形条
+
     private static View createStatusView(Activity activity, int color) {
         // 获得状态栏高度
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");

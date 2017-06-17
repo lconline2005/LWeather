@@ -1,6 +1,6 @@
 package com.example.lyx.lweather.fragment;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lyx.lweather.R;
+import com.example.lyx.lweather.activity.MainActivity;
 import com.example.lyx.lweather.activity.WeatherActivity;
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
@@ -110,11 +111,18 @@ public class ChooseAreaFragment extends Fragment {
                 }else if (currentLevel==LEVEL_COUNTY){
                     selectedCounty = countyList.get(position);
                     String weatherId=countyList.get(position).getWeatherID();
-                    Intent intent=new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    intent.putExtra("lastcountyid",selectedCounty.getWeatherID());
-                    startActivity(intent);
-                    getActivity().finish();
+                    if (getActivity() instanceof MainActivity) {
+                        Intent intent=new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id",weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if (getActivity() instanceof WeatherActivity){
+                        WeatherActivity activity= (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
+
                 }
 
             }

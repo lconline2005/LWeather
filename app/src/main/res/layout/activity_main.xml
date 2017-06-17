@@ -6,9 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.example.lyx.lweather.activity.MainActivity">
 
-    <fragment
-        android:id="@+id/choose_area_fragment"
-        android:name="com.example.lyx.lweather.fragment.ChooseAreaFragment"
+    <FrameLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/choose_area_fragment_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </RelativeLayout>

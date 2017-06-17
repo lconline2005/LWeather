@@ -6,9 +6,10 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:fitsSystemWindows="true"
+
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
         android:background="@color/toolbarbackground">
 
         <ImageView
@@ -18,22 +19,23 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:scaleType="centerCrop"
-            android:background="@mipmap/acg" />
+            android:background="@mipmap/acg"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="#fff"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <ListView
         android:id="@+id/list_view"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#fff"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" />
 </LinearLayout>

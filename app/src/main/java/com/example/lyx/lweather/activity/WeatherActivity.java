@@ -1,7 +1,10 @@
 package com.example.lyx.lweather.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import android.os.Bundle;
 import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +23,7 @@ import com.example.lyx.lweather.R;
 import com.example.lyx.lweather.gson.Basic;
 import com.example.lyx.lweather.gson.Forecast;
 import com.example.lyx.lweather.gson.Weather;
+import com.example.lyx.lweather.network.service.AutoUpdateService;
 import com.example.lyx.lweather.utils.HttpUtil;
 import com.example.lyx.lweather.utils.LogUtil;
 import com.example.lyx.lweather.utils.Utility;
@@ -46,16 +51,18 @@ public class WeatherActivity extends BaseActivity{
     private LinearLayout forecastLayout;
     private ImageView bingPicImg;
     public SwipeRefreshLayout swipeRefresh;
+    public DrawerLayout drawerLayout;
+    private ImageButton navButton;
+
+    String weatherId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         FindView();
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
-        String weatherString=prefs.getString("weather",null);
-        String lastCityId=prefs.getString("lastcountyid",null);
-        final String weatherId;
-        if (weatherString!=null&&getIntent().getStringExtra("lastcountyid").equals(lastCityId)) {
+        String weatherString=prefs.getString("weather_id",null);
+        if (weatherString!=null) {
             Weather weather= Utility.handleWeatherResponse(weatherString);
             weatherId=weather.basic.weatherId;
             showWeatherInfo(weather);
@@ -77,6 +84,14 @@ public class WeatherActivity extends BaseActivity{
         }else{
             loadBingPic();
         }
+
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
     }
 
     /*加载背景图片*/
@@ -118,10 +133,13 @@ public class WeatherActivity extends BaseActivity{
         bingPicImg= (ImageView) findViewById(R.id.bing_pic_img);
         swipeRefresh= (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.weatherbackground);
+        drawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
+        navButton= (ImageButton) findViewById(R.id.nav_button);
     }
 
     /*根据天气ID请求城市天气*/
     public void requestWeather(final String weatherId){
+        this.weatherId=weatherId;
         final String WeatherUrl="http://guolin.tech/api/weather?cityid="+weatherId+"&key=bc0418b57b2d4918819d3974ac1285d9";
         HttpUtil.sendOkHttpRequest(WeatherUrl, new Callback() {
             @Override
@@ -146,9 +164,9 @@ public class WeatherActivity extends BaseActivity{
                         if (weather!=null&&weather.status.equals("ok")) {
                             SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather",responText);
-                            editor.putString("lastcityid",getIntent().getStringExtra("lastcityid"));
                             editor.apply();
                             showWeatherInfo(weather);
+
                         }else {
                             Toast.makeText(WeatherActivity.this,"获取天气信息失败",Toast.LENGTH_SHORT).show();
                         }
@@ -162,6 +180,10 @@ public class WeatherActivity extends BaseActivity{
 
     /*处理展示weather中数据*/
     public void showWeatherInfo(Weather weather){
+        //开启自动更新服务
+        Intent intent=new Intent(WeatherActivity.this, AutoUpdateService.class);
+        startService(intent);
+
         String cityName=weather.basic.cityName;
         String updateTime=weather.basic.update.updateTime.split(" ")[1];
         String degree=weather.now.temperature+"℃";
