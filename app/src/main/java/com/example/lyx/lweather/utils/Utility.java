@@ -1,6 +1,7 @@
 package com.example.lyx.lweather.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
@@ -62,6 +63,7 @@ public class Utility {
                 for (int i=0;i<response.size();i++){
                     County county=new County();
                     CountyEntity countyEntity=response.get(i);
+                    LogUtil.i(TAG,"countyEntity==>"+countyEntity.toString());
                     county.setCityID(cityId);
                     county.setCountyName(countyEntity.getName());
                     county.setWeatherID(countyEntity.getWeather_id());

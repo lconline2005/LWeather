@@ -1,7 +1,7 @@
 package com.example.lyx.lweather.fragment;
 
 import android.app.ProgressDialog;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lyx.lweather.R;
+import com.example.lyx.lweather.activity.WeatherActivity;
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
 import com.example.lyx.lweather.dbase.Province;
@@ -109,6 +110,12 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCity = cityList.get(position);
                     queryCounties();
                     LogUtil.d(TAG, "==>" + selectedCity.getCityName() + selectedCity.getCityCode() + currentLevel);
+                } else if (currentLevel == LEVEL_COUNTY) {
+                    selectedCounty=countyList.get(position);
+                    Intent intent =new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weatherid",selectedCounty.getWeatherID());
+                    startActivity(intent);
+                    getActivity().finish();
                 }
 
             }
@@ -205,7 +212,7 @@ public class ChooseAreaFragment extends Fragment {
             @Override
             public void onResponse(Call<List<CountyEntity>> call, Response<List<CountyEntity>> response) {
                 isLoadSuccess = Utility.handleCountyResponse(response.body(), cityId);
-                LogUtil.d(TAG, "resultCounty==>" + response.body());
+                LogUtil.d(TAG, "resultCounty==>is" + isLoadSuccess.toString() + response.body());
                 IsLoad(type, isLoadSuccess);
             }
 
@@ -255,7 +262,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCities() {
         titletext.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
-        cityList = DataSupport.where("provinceid=?", String.valueOf(selectedProvince.getId())).find(City.class);
+        cityList = DataSupport.where("provinceid=?", String.valueOf(selectedProvince.getProvinceCode())).find(City.class);
         if (cityList.size() > 0) {
             dataList.clear();
             for (City city : cityList) {
@@ -274,8 +281,9 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         titletext.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-//        countyList = DataSupport.where("cityid=?", String.valueOf(selectedCity.getId())).find(County.class);
-        countyList=DataSupport.where("cityid=?",String.valueOf(selectedCity.getId())).find(County.class);
+        List<County> list=DataSupport.findAll(County.class);
+        countyList = DataSupport.where("cityid=?", String.valueOf(selectedCity.getCityCode())).find(County.class);
+
         if (countyList.size() > 0) {
             dataList.clear();
             for (County county : countyList) {
