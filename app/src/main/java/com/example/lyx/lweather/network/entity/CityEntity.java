@@ -1,10 +1,15 @@
 package com.example.lyx.lweather.network.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017/6/14.
  */
 
-public class CityEntity {
+public class CityEntity  {
 
     /**
      * id : 10
@@ -29,4 +34,5 @@ public class CityEntity {
     public void setName(String name) {
         this.name = name;
     }
+
 }

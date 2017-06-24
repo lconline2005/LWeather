@@ -1,5 +1,6 @@
 package com.example.lyx.lweather.network.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,34 +9,27 @@ import java.util.List;
  * 修改备注：
  */
 
-public class CountyWeatherEntity {
+public class CountyWeatherEntity  implements Serializable{
 
-    private List<HeWeather5Bean> HeWeather5;
+    private List<HeWeatherBean> HeWeather;
 
-    @Override
-    public String toString() {
-        return "CountyWeatherEntity{" +
-                "HeWeather5=" + HeWeather5 +
-                '}';
+    public List<HeWeatherBean> getHeWeather() {
+        return HeWeather;
     }
 
-    public List<HeWeather5Bean> getHeWeather5() {
-        return HeWeather5;
+    public void setHeWeather(List<HeWeatherBean> HeWeather) {
+        this.HeWeather = HeWeather;
     }
 
-    public void setHeWeather5(List<HeWeather5Bean> HeWeather5) {
-        this.HeWeather5 = HeWeather5;
-    }
-
-    public static class HeWeather5Bean {
+    public static class HeWeatherBean {
         /**
-         * aqi : {"city":{"aqi":"29","co":"1","no2":"39","o3":"62","pm10":"29","pm25":"20","qlty":"优","so2":"5"}}
-         * basic : {"city":"苏州","cnty":"中国","id":"CN101190401","lat":"31.29937935","lon":"120.61958313","update":{"loc":"2017-06-21 22:50","utc":"2017-06-21 14:50"}}
-         * daily_forecast : [{"astro":{"mr":"02:21","ms":"15:49","sr":"04:54","ss":"19:05"},"cond":{"code_d":"100","code_n":"104","txt_d":"晴","txt_n":"阴"},"date":"2017-06-21","hum":"77","pcpn":"2.3","pop":"91","pres":"1005","tmp":{"max":"28","min":"23"},"uv":"6","vis":"13","wind":{"deg":"133","dir":"东南风","sc":"微风","spd":"4"}},{"astro":{"mr":"03:08","ms":"16:57","sr":"04:55","ss":"19:06"},"cond":{"code_d":"300","code_n":"104","txt_d":"阵雨","txt_n":"阴"},"date":"2017-06-22","hum":"80","pcpn":"0.7","pop":"84","pres":"1004","tmp":{"max":"28","min":"23"},"uv":"11","vis":"17","wind":{"deg":"117","dir":"东南风","sc":"微风","spd":"7"}},{"astro":{"mr":"04:00","ms":"18:05","sr":"04:55","ss":"19:06"},"cond":{"code_d":"306","code_n":"310","txt_d":"中雨","txt_n":"暴雨"},"date":"2017-06-23","hum":"84","pcpn":"42.9","pop":"100","pres":"1003","tmp":{"max":"27","min":"23"},"uv":"7","vis":"15","wind":{"deg":"107","dir":"南风","sc":"微风","spd":"4"}}]
-         * hourly_forecast : []
-         * now : {"cond":{"code":"101","txt":"多云"},"fl":"26","hum":"82","pcpn":"0","pres":"1005","tmp":"24","vis":"10","wind":{"deg":"141","dir":"东风","sc":"3-4","spd":"20"}}
+         * aqi : {"city":{"aqi":"67","co":"1","no2":"72","o3":"53","pm10":"84","pm25":"47","qlty":"良","so2":"7"}}
+         * basic : {"city":"苏州","cnty":"中国","id":"CN101190401","lat":"31.29937935","lon":"120.61958313","update":{"loc":"2017-06-23 16:50","utc":"2017-06-23 08:50"}}
+         * daily_forecast : [{"astro":{"mr":"04:00","ms":"18:05","sr":"04:55","ss":"19:06"},"cond":{"code_d":"300","code_n":"307","txt_d":"阵雨","txt_n":"大雨"},"date":"2017-06-23","hum":"83","pcpn":"7.5","pop":"100","pres":"1003","tmp":{"max":"27","min":"23"},"uv":"5","vis":"13","wind":{"deg":"159","dir":"东南风","sc":"3-4","spd":"14"}},{"astro":{"mr":"04:57","ms":"19:10","sr":"04:55","ss":"19:06"},"cond":{"code_d":"307","code_n":"306","txt_d":"大雨","txt_n":"中雨"},"date":"2017-06-24","hum":"85","pcpn":"0.3","pop":"100","pres":"1000","tmp":{"max":"26","min":"23"},"uv":"9","vis":"15","wind":{"deg":"145","dir":"南风","sc":"3-4","spd":"12"}},{"astro":{"mr":"06:00","ms":"20:10","sr":"04:56","ss":"19:06"},"cond":{"code_d":"302","code_n":"300","txt_d":"雷阵雨","txt_n":"阵雨"},"date":"2017-06-25","hum":"82","pcpn":"3.2","pop":"97","pres":"1002","tmp":{"max":"26","min":"23"},"uv":"7","vis":"13","wind":{"deg":"186","dir":"西风","sc":"3-4","spd":"16"}},{"astro":{"mr":"07:05","ms":"21:04","sr":"04:56","ss":"19:06"},"cond":{"code_d":"104","code_n":"104","txt_d":"阴","txt_n":"阴"},"date":"2017-06-26","hum":"75","pcpn":"2.0","pop":"95","pres":"1004","tmp":{"max":"27","min":"23"},"uv":"10","vis":"18","wind":{"deg":"246","dir":"西风","sc":"3-4","spd":"11"}},{"astro":{"mr":"08:10","ms":"21:51","sr":"04:56","ss":"19:06"},"cond":{"code_d":"302","code_n":"104","txt_d":"雷阵雨","txt_n":"阴"},"date":"2017-06-27","hum":"76","pcpn":"1.8","pop":"91","pres":"1007","tmp":{"max":"28","min":"23"},"uv":"9","vis":"18","wind":{"deg":"211","dir":"南风","sc":"微风","spd":"3"}},{"astro":{"mr":"09:14","ms":"22:33","sr":"04:56","ss":"19:06"},"cond":{"code_d":"302","code_n":"306","txt_d":"雷阵雨","txt_n":"中雨"},"date":"2017-06-28","hum":"79","pcpn":"1.7","pop":"81","pres":"1008","tmp":{"max":"28","min":"23"},"uv":"6","vis":"18","wind":{"deg":"171","dir":"南风","sc":"微风","spd":"8"}},{"astro":{"mr":"10:15","ms":"23:11","sr":"04:57","ss":"19:06"},"cond":{"code_d":"306","code_n":"307","txt_d":"中雨","txt_n":"大雨"},"date":"2017-06-29","hum":"81","pcpn":"2.3","pop":"86","pres":"1007","tmp":{"max":"27","min":"24"},"uv":"6","vis":"19","wind":{"deg":"120","dir":"南风","sc":"微风","spd":"3"}}]
+         * hourly_forecast : [{"cond":{"code":"305","txt":"小雨"},"date":"2017-06-23 19:00","hum":"83","pop":"98","pres":"1002","tmp":"26","wind":{"deg":"205","dir":"西南风","sc":"微风","spd":"13"}},{"cond":{"code":"305","txt":"小雨"},"date":"2017-06-23 22:00","hum":"85","pop":"48","pres":"1002","tmp":"26","wind":{"deg":"212","dir":"西南风","sc":"微风","spd":"11"}}]
+         * now : {"cond":{"code":"300","txt":"阵雨"},"fl":"32","hum":"93","pcpn":"0","pres":"1005","tmp":"25","vis":"7","wind":{"deg":"161","dir":"东南风","sc":"微风","spd":"7"}}
          * status : ok
-         * suggestion : {"comf":{"brf":"较舒适","txt":"白天天气晴好，同时较大的空气湿度，会使您在午后略感闷热，但早晚仍很凉爽、舒适。"},"cw":{"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"},"drsg":{"brf":"热","txt":"天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。"},"flu":{"brf":"少发","txt":"各项气象条件适宜，无明显降温过程，发生感冒机率较低。"},"sport":{"brf":"较不宜","txt":"天气较好，但因风力较强，在户外要选择合适的运动；另外考虑到高温天气，建议停止高强度运动。"},"trav":{"brf":"适宜","txt":"天气较好，温度适宜，但风稍微有点大。这样的天气适宜旅游，您可以尽情地享受大自然的无限风光。"},"uv":{"brf":"弱","txt":"紫外线强度较弱，建议出门前涂擦SPF在12-15之间、PA+的防晒护肤品。"}}
+         * suggestion : {"comf":{"brf":"较舒适","txt":"白天有雨，从而使空气湿度加大，会使人们感觉有点儿闷热，但早晚的天气很凉爽、舒适。"},"cw":{"brf":"不宜","txt":"不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。"},"drsg":{"brf":"舒适","txt":"建议着长袖T恤、衬衫加单裤等服装。年老体弱者宜着针织长袖衬衫、马甲和长裤。"},"flu":{"brf":"较易发","txt":"天气转凉，空气湿度较大，较易发生感冒，体质较弱的朋友请注意适当防护。"},"sport":{"brf":"较不宜","txt":"有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。"},"trav":{"brf":"适宜","txt":"有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。"},"uv":{"brf":"弱","txt":"紫外线强度较弱，建议出门前涂擦SPF在12-15之间、PA+的防晒护肤品。"}}
          */
 
         private AqiBean aqi;
@@ -44,7 +38,7 @@ public class CountyWeatherEntity {
         private String status;
         private SuggestionBean suggestion;
         private List<DailyForecastBean> daily_forecast;
-        private List<?> hourly_forecast;
+        private List<HourlyForecastBean> hourly_forecast;
 
         public AqiBean getAqi() {
             return aqi;
@@ -94,17 +88,17 @@ public class CountyWeatherEntity {
             this.daily_forecast = daily_forecast;
         }
 
-        public List<?> getHourly_forecast() {
+        public List<HourlyForecastBean> getHourly_forecast() {
             return hourly_forecast;
         }
 
-        public void setHourly_forecast(List<?> hourly_forecast) {
+        public void setHourly_forecast(List<HourlyForecastBean> hourly_forecast) {
             this.hourly_forecast = hourly_forecast;
         }
 
         public static class AqiBean {
             /**
-             * city : {"aqi":"29","co":"1","no2":"39","o3":"62","pm10":"29","pm25":"20","qlty":"优","so2":"5"}
+             * city : {"aqi":"67","co":"1","no2":"72","o3":"53","pm10":"84","pm25":"47","qlty":"良","so2":"7"}
              */
 
             private CityBean city;
@@ -119,14 +113,14 @@ public class CountyWeatherEntity {
 
             public static class CityBean {
                 /**
-                 * aqi : 29
+                 * aqi : 67
                  * co : 1
-                 * no2 : 39
-                 * o3 : 62
-                 * pm10 : 29
-                 * pm25 : 20
-                 * qlty : 优
-                 * so2 : 5
+                 * no2 : 72
+                 * o3 : 53
+                 * pm10 : 84
+                 * pm25 : 47
+                 * qlty : 良
+                 * so2 : 7
                  */
 
                 private String aqi;
@@ -211,7 +205,7 @@ public class CountyWeatherEntity {
              * id : CN101190401
              * lat : 31.29937935
              * lon : 120.61958313
-             * update : {"loc":"2017-06-21 22:50","utc":"2017-06-21 14:50"}
+             * update : {"loc":"2017-06-23 16:50","utc":"2017-06-23 08:50"}
              */
 
             private String city;
@@ -271,8 +265,8 @@ public class CountyWeatherEntity {
 
             public static class UpdateBean {
                 /**
-                 * loc : 2017-06-21 22:50
-                 * utc : 2017-06-21 14:50
+                 * loc : 2017-06-23 16:50
+                 * utc : 2017-06-23 08:50
                  */
 
                 private String loc;
@@ -298,14 +292,14 @@ public class CountyWeatherEntity {
 
         public static class NowBean {
             /**
-             * cond : {"code":"101","txt":"多云"}
-             * fl : 26
-             * hum : 82
+             * cond : {"code":"300","txt":"阵雨"}
+             * fl : 32
+             * hum : 93
              * pcpn : 0
              * pres : 1005
-             * tmp : 24
-             * vis : 10
-             * wind : {"deg":"141","dir":"东风","sc":"3-4","spd":"20"}
+             * tmp : 25
+             * vis : 7
+             * wind : {"deg":"161","dir":"东南风","sc":"微风","spd":"7"}
              */
 
             private CondBean cond;
@@ -383,8 +377,8 @@ public class CountyWeatherEntity {
 
             public static class CondBean {
                 /**
-                 * code : 101
-                 * txt : 多云
+                 * code : 300
+                 * txt : 阵雨
                  */
 
                 private String code;
@@ -409,10 +403,10 @@ public class CountyWeatherEntity {
 
             public static class WindBean {
                 /**
-                 * deg : 141
-                 * dir : 东风
-                 * sc : 3-4
-                 * spd : 20
+                 * deg : 161
+                 * dir : 东南风
+                 * sc : 微风
+                 * spd : 7
                  */
 
                 private String deg;
@@ -456,12 +450,12 @@ public class CountyWeatherEntity {
 
         public static class SuggestionBean {
             /**
-             * comf : {"brf":"较舒适","txt":"白天天气晴好，同时较大的空气湿度，会使您在午后略感闷热，但早晚仍很凉爽、舒适。"}
-             * cw : {"brf":"较适宜","txt":"较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。"}
-             * drsg : {"brf":"热","txt":"天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。"}
-             * flu : {"brf":"少发","txt":"各项气象条件适宜，无明显降温过程，发生感冒机率较低。"}
-             * sport : {"brf":"较不宜","txt":"天气较好，但因风力较强，在户外要选择合适的运动；另外考虑到高温天气，建议停止高强度运动。"}
-             * trav : {"brf":"适宜","txt":"天气较好，温度适宜，但风稍微有点大。这样的天气适宜旅游，您可以尽情地享受大自然的无限风光。"}
+             * comf : {"brf":"较舒适","txt":"白天有雨，从而使空气湿度加大，会使人们感觉有点儿闷热，但早晚的天气很凉爽、舒适。"}
+             * cw : {"brf":"不宜","txt":"不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。"}
+             * drsg : {"brf":"舒适","txt":"建议着长袖T恤、衬衫加单裤等服装。年老体弱者宜着针织长袖衬衫、马甲和长裤。"}
+             * flu : {"brf":"较易发","txt":"天气转凉，空气湿度较大，较易发生感冒，体质较弱的朋友请注意适当防护。"}
+             * sport : {"brf":"较不宜","txt":"有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。"}
+             * trav : {"brf":"适宜","txt":"有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。"}
              * uv : {"brf":"弱","txt":"紫外线强度较弱，建议出门前涂擦SPF在12-15之间、PA+的防晒护肤品。"}
              */
 
@@ -532,7 +526,7 @@ public class CountyWeatherEntity {
             public static class ComfBean {
                 /**
                  * brf : 较舒适
-                 * txt : 白天天气晴好，同时较大的空气湿度，会使您在午后略感闷热，但早晚仍很凉爽、舒适。
+                 * txt : 白天有雨，从而使空气湿度加大，会使人们感觉有点儿闷热，但早晚的天气很凉爽、舒适。
                  */
 
                 private String brf;
@@ -557,8 +551,8 @@ public class CountyWeatherEntity {
 
             public static class CwBean {
                 /**
-                 * brf : 较适宜
-                 * txt : 较适宜洗车，未来一天无雨，风力较小，擦洗一新的汽车至少能保持一天。
+                 * brf : 不宜
+                 * txt : 不宜洗车，未来24小时内有雨，如果在此期间洗车，雨水和路上的泥水可能会再次弄脏您的爱车。
                  */
 
                 private String brf;
@@ -583,8 +577,8 @@ public class CountyWeatherEntity {
 
             public static class DrsgBean {
                 /**
-                 * brf : 热
-                 * txt : 天气热，建议着短裙、短裤、短薄外套、T恤等夏季服装。
+                 * brf : 舒适
+                 * txt : 建议着长袖T恤、衬衫加单裤等服装。年老体弱者宜着针织长袖衬衫、马甲和长裤。
                  */
 
                 private String brf;
@@ -609,8 +603,8 @@ public class CountyWeatherEntity {
 
             public static class FluBean {
                 /**
-                 * brf : 少发
-                 * txt : 各项气象条件适宜，无明显降温过程，发生感冒机率较低。
+                 * brf : 较易发
+                 * txt : 天气转凉，空气湿度较大，较易发生感冒，体质较弱的朋友请注意适当防护。
                  */
 
                 private String brf;
@@ -636,7 +630,7 @@ public class CountyWeatherEntity {
             public static class SportBean {
                 /**
                  * brf : 较不宜
-                 * txt : 天气较好，但因风力较强，在户外要选择合适的运动；另外考虑到高温天气，建议停止高强度运动。
+                 * txt : 有降水，且风力较强，气压较低，推荐您在室内进行低强度运动；若坚持户外运动，须注意避雨防风。
                  */
 
                 private String brf;
@@ -662,7 +656,7 @@ public class CountyWeatherEntity {
             public static class TravBean {
                 /**
                  * brf : 适宜
-                 * txt : 天气较好，温度适宜，但风稍微有点大。这样的天气适宜旅游，您可以尽情地享受大自然的无限风光。
+                 * txt : 有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具。
                  */
 
                 private String brf;
@@ -714,17 +708,17 @@ public class CountyWeatherEntity {
 
         public static class DailyForecastBean {
             /**
-             * astro : {"mr":"02:21","ms":"15:49","sr":"04:54","ss":"19:05"}
-             * cond : {"code_d":"100","code_n":"104","txt_d":"晴","txt_n":"阴"}
-             * date : 2017-06-21
-             * hum : 77
-             * pcpn : 2.3
-             * pop : 91
-             * pres : 1005
-             * tmp : {"max":"28","min":"23"}
-             * uv : 6
+             * astro : {"mr":"04:00","ms":"18:05","sr":"04:55","ss":"19:06"}
+             * cond : {"code_d":"300","code_n":"307","txt_d":"阵雨","txt_n":"大雨"}
+             * date : 2017-06-23
+             * hum : 83
+             * pcpn : 7.5
+             * pop : 100
+             * pres : 1003
+             * tmp : {"max":"27","min":"23"}
+             * uv : 5
              * vis : 13
-             * wind : {"deg":"133","dir":"东南风","sc":"微风","spd":"4"}
+             * wind : {"deg":"159","dir":"东南风","sc":"3-4","spd":"14"}
              */
 
             private AstroBean astro;
@@ -829,10 +823,10 @@ public class CountyWeatherEntity {
 
             public static class AstroBean {
                 /**
-                 * mr : 02:21
-                 * ms : 15:49
-                 * sr : 04:54
-                 * ss : 19:05
+                 * mr : 04:00
+                 * ms : 18:05
+                 * sr : 04:55
+                 * ss : 19:06
                  */
 
                 private String mr;
@@ -875,10 +869,10 @@ public class CountyWeatherEntity {
 
             public static class CondBeanX {
                 /**
-                 * code_d : 100
-                 * code_n : 104
-                 * txt_d : 晴
-                 * txt_n : 阴
+                 * code_d : 300
+                 * code_n : 307
+                 * txt_d : 阵雨
+                 * txt_n : 大雨
                  */
 
                 private String code_d;
@@ -921,7 +915,7 @@ public class CountyWeatherEntity {
 
             public static class TmpBean {
                 /**
-                 * max : 28
+                 * max : 27
                  * min : 23
                  */
 
@@ -947,10 +941,158 @@ public class CountyWeatherEntity {
 
             public static class WindBeanX {
                 /**
-                 * deg : 133
+                 * deg : 159
                  * dir : 东南风
+                 * sc : 3-4
+                 * spd : 14
+                 */
+
+                private String deg;
+                private String dir;
+                private String sc;
+                private String spd;
+
+                public String getDeg() {
+                    return deg;
+                }
+
+                public void setDeg(String deg) {
+                    this.deg = deg;
+                }
+
+                public String getDir() {
+                    return dir;
+                }
+
+                public void setDir(String dir) {
+                    this.dir = dir;
+                }
+
+                public String getSc() {
+                    return sc;
+                }
+
+                public void setSc(String sc) {
+                    this.sc = sc;
+                }
+
+                public String getSpd() {
+                    return spd;
+                }
+
+                public void setSpd(String spd) {
+                    this.spd = spd;
+                }
+            }
+        }
+
+        public static class HourlyForecastBean {
+            /**
+             * cond : {"code":"305","txt":"小雨"}
+             * date : 2017-06-23 19:00
+             * hum : 83
+             * pop : 98
+             * pres : 1002
+             * tmp : 26
+             * wind : {"deg":"205","dir":"西南风","sc":"微风","spd":"13"}
+             */
+
+            private CondBeanXX cond;
+            private String date;
+            private String hum;
+            private String pop;
+            private String pres;
+            private String tmp;
+            private WindBeanXX wind;
+
+            public CondBeanXX getCond() {
+                return cond;
+            }
+
+            public void setCond(CondBeanXX cond) {
+                this.cond = cond;
+            }
+
+            public String getDate() {
+                return date;
+            }
+
+            public void setDate(String date) {
+                this.date = date;
+            }
+
+            public String getHum() {
+                return hum;
+            }
+
+            public void setHum(String hum) {
+                this.hum = hum;
+            }
+
+            public String getPop() {
+                return pop;
+            }
+
+            public void setPop(String pop) {
+                this.pop = pop;
+            }
+
+            public String getPres() {
+                return pres;
+            }
+
+            public void setPres(String pres) {
+                this.pres = pres;
+            }
+
+            public String getTmp() {
+                return tmp;
+            }
+
+            public void setTmp(String tmp) {
+                this.tmp = tmp;
+            }
+
+            public WindBeanXX getWind() {
+                return wind;
+            }
+
+            public void setWind(WindBeanXX wind) {
+                this.wind = wind;
+            }
+
+            public static class CondBeanXX {
+                /**
+                 * code : 305
+                 * txt : 小雨
+                 */
+
+                private String code;
+                private String txt;
+
+                public String getCode() {
+                    return code;
+                }
+
+                public void setCode(String code) {
+                    this.code = code;
+                }
+
+                public String getTxt() {
+                    return txt;
+                }
+
+                public void setTxt(String txt) {
+                    this.txt = txt;
+                }
+            }
+
+            public static class WindBeanXX {
+                /**
+                 * deg : 205
+                 * dir : 西南风
                  * sc : 微风
-                 * spd : 4
+                 * spd : 13
                  */
 
                 private String deg;

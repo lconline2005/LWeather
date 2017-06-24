@@ -15,5 +15,5 @@ import retrofit2.http.Query;
 
 public interface IWeatherService {
     @GET("weather?")
-    Call<CountyWeatherEntity> getWeather(@Query("city") String weatherId,@Query("key") String key);
+    Call<CountyWeatherEntity> getWeather(@Query("cityid") String weatherId,@Query("key") String key);
 }

@@ -1,5 +1,8 @@
 package com.example.lyx.lweather.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -8,6 +11,7 @@ import com.example.lyx.lweather.dbase.County;
 import com.example.lyx.lweather.dbase.Province;
 import com.example.lyx.lweather.network.entity.CityEntity;
 import com.example.lyx.lweather.network.entity.CountyEntity;
+import com.example.lyx.lweather.network.entity.CountyWeatherEntity;
 import com.example.lyx.lweather.network.entity.ProvinceEntity;
 
 import org.json.JSONArray;
@@ -73,5 +77,46 @@ public class Utility {
         }
         return false;
     }
+
+
+    /**
+     *
+     * 存到SharedPreferences
+     * @param context
+     * @param Info
+     */
+    public static void PutInfoToSP(Context context,String prekey, String Info){
+        SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(prekey,Info);
+        editor.commit();
+    }
+
+    /**
+     * 从SharedPreferences中取出
+     * @param context
+     * @return
+     */
+    public static String GetInfoFromSP(Context context,String prekey){
+        SharedPreferences preferences=PreferenceManager.getDefaultSharedPreferences(context);
+        String WeatherId=preferences.getString(prekey,null);
+        return WeatherId;
+    }
+
+    /**
+     *
+     * 存到SharedPreferences
+     * @param context
+     * @param Info
+     */
+    public static void PutWeatherToSP(Context context,String prekey, CountyWeatherEntity Info){
+        SharedPreferences.Editor editor= PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString(prekey,Info.toString());
+//        Boolean successed=editor.commit();
+        editor.commit();
+//        LogUtil.d(TAG,"存储==>"+successed);
+    }
+
+
+
 
 }
