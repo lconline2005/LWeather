@@ -5,253 +5,375 @@
     android:id="@+id/activity_weather"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/weatherbackground"
     tools:context="com.example.lyx.lweather.activity.WeatherActivity">
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/weatherrefresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
 
-            <FrameLayout
-                android:id="@+id/header"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+                android:layout_height="match_parent">
 
-
-                <com.github.florent37.diagonallayout.DiagonalLayout
+                <FrameLayout
+                    android:id="@+id/header"
                     android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    android:elevation="40dp"
-                    diagonal:diagonal_angle="10"
-                    diagonal:diagonal_direction="left"
-                    diagonal:diagonal_position="bottom">
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true">
 
-                    <ImageView
-                        android:id="@+id/headerimage"
+
+                    <com.github.florent37.diagonallayout.DiagonalLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
-                </com.github.florent37.diagonallayout.DiagonalLayout>
+                        android:layout_height="280dp"
+                        android:elevation="40dp"
+                        diagonal:diagonal_angle="10"
+                        diagonal:diagonal_direction="left"
+                        diagonal:diagonal_position="bottom">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/headerimage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </com.github.florent37.diagonallayout.DiagonalLayout>
 
                     <RelativeLayout
-                        android:id="@+id/title"
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize">
+                        android:layout_height="wrap_content">
 
-                        <ImageButton
-                            android:id="@+id/showchoosearea"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:background="@mipmap/zdwhite"
-                            android:scaleType="centerCrop" />
+                        <RelativeLayout
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize">
 
-                        <TextView
-                            android:id="@+id/countyname"
-                            android:layout_width="wrap_content"
+                            <ImageButton
+                                android:id="@+id/showchoosearea"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="10dp"
+                                android:background="@mipmap/zdwhite"
+                                android:scaleType="centerCrop" />
+
+                            <TextView
+                                android:id="@+id/countyname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="城市"
+                                android:textColor="#fff"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/updatetime_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="10dp"
+                                android:text="更新时间"
+                                android:textColor="#fff" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="城市"
-                            android:textColor="#fff"
-                            android:textSize="20sp" />
+                            android:layout_below="@+id/title">
 
-                        <TextView
-                            android:id="@+id/updatetime_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="10dp"
-                            android:text="更新时间"
-                            android:textColor="#fff" />
+                            <TextView
+                                android:id="@+id/temp_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_margin="20dp"
+                                android:text="气温"
+                                android:textColor="#fff"
+                                android:textSize="40sp" />
+
+                            <TextView
+                                android:id="@+id/cond_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/temp_text"
+                                android:layout_margin="10dp"
+                                android:text="天气"
+                                android:textColor="#fff"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/winddir_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/temp_text"
+                                android:layout_below="@+id/temp_text"
+                                android:text="风向"
+                                android:textColor="#fff"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/windsc_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignTop="@+id/winddir_text"
+                                android:layout_marginLeft="20dp"
+                                android:layout_toRightOf="@+id/winddir_text"
+                                android:text="风力"
+                                android:textColor="#fff"
+                                android:textSize="18sp" />
+
+                        </RelativeLayout>
+
+
                     </RelativeLayout>
 
+                </FrameLayout>
 
-                    <RelativeLayout
+                <TextView
+                    android:id="@+id/aqititle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/header"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="-20dp"
+                    android:text="空气指数"
+                    android:textColor="@color/maintextcolor"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/AQI"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/header"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="15dp">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/title">
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="5dp"
+                                android:text="AQI指数"
+                                android:textColor="@color/maintextcolor" />
+
+                            <TextView
+                                android:id="@+id/aqi_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="AQI"
+                                android:textColor="@color/maintextcolor"
+                                android:textSize="20sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="120dp"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="5dp"
+                                android:text="PM2.5指数"
+                                android:textColor="@color/maintextcolor" />
+
+                            <TextView
+                                android:id="@+id/pm25_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="PM2.5"
+                                android:textColor="@color/maintextcolor"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/airqul_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_margin="5dp"
+                                android:text="空气质量："
+                                android:textColor="@color/maintextcolor"
+                                android:textSize="14sp" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/dailyforecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/AQI"
+                    android:layout_margin="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/temp_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_margin="20dp"
-                            android:text="气温"
-                            android:textColor="#fff"
-                            android:textSize="40sp" />
+                            android:layout_margin="5dp"
+                            android:text="一周预报"
+                            android:textColor="@color/maintextcolor"
+                            android:textSize="16sp" />
 
-                        <TextView
-                            android:id="@+id/cond_text"
-                            android:layout_width="wrap_content"
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/dailyrecycler"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignTop="@id/temp_text"
-                            android:layout_margin="10dp"
-                            android:text="天气"
-                            android:textColor="#fff"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/mintemp_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignLeft="@+id/temp_text"
-                            android:layout_below="@+id/temp_text"
-                            android:text="min℃"
-                            android:textColor="#fff"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/maxtemp_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignTop="@+id/mintemp_text"
-                            android:layout_marginLeft="20dp"
-                            android:layout_toRightOf="@+id/mintemp_text"
-                            android:text="max℃"
-                            android:textColor="#fff"
-                            android:textSize="18sp" />
-
-                    </RelativeLayout>
-
-
-                </RelativeLayout>
-
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/aqititle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/header"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="-20dp"
-                android:text="空气指数"
-                android:textColor="@color/maintextcolor"
-                android:textSize="18sp" />
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/AQI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/header"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="15dp">
+                            android:padding="6dp" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_margin="5dp"
-                            android:text="AQI指数"
-                            android:textColor="@color/maintextcolor" />
-
-                        <TextView
-                            android:id="@+id/aqi_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="AQI"
-                            android:textColor="@color/maintextcolor"
-                            android:textSize="20sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_margin="5dp"
-                            android:text="PM2.5指数"
-                            android:textColor="@color/maintextcolor" />
-
-                        <TextView
-                            android:id="@+id/pm25_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="PM2.5"
-                            android:textColor="@color/maintextcolor"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/airaqi_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_margin="5dp"
-                            android:text="空气质量："
-                            android:textColor="@color/maintextcolor"
-                            android:textSize="14sp" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_below="@+id/AQI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dailyforecast"
+                    android:layout_margin="8dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="一周预报"
-                        android:textColor="@color/maintextcolor"
-                        android:textSize="16sp" />
-                    <android.support.v7.widget.RecyclerView
-                        android:padding="6dp"
-                        android:id="@+id/dailyrecycler"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="生活小贴士"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="舒适度:" />
+
+                        <TextView
+                            android:id="@+id/comfort_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="4" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="洗车指数:" />
+
+                        <TextView
+                            android:id="@+id/washcar_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="4" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="着装推荐:" />
+
+                        <TextView
+                            android:id="@+id/dress_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="4" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="运动指数:" />
+
+                        <TextView
+                            android:id="@+id/sport_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="4" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="护肤推荐:" />
+
+                        <TextView
+                            android:id="@+id/hufu_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="4" />
+                    </LinearLayout>
+
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-        </RelativeLayout>
-
-
-    </android.support.v4.widget.NestedScrollView>
-
+            </RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.v4.widget.DrawerLayout>

@@ -42,6 +42,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.lyx.lweather.utils.Utility.PutInfoToSP;
+
 
 /**
  * Created by Administrator on 2017/6/13.
@@ -112,6 +114,8 @@ public class ChooseAreaFragment extends Fragment {
                     LogUtil.d(TAG, "==>" + selectedCity.getCityName() + selectedCity.getCityCode() + currentLevel);
                 } else if (currentLevel == LEVEL_COUNTY) {
                     selectedCounty=countyList.get(position);
+                    //保存weatherid
+                    PutInfoToSP(getActivity(),"weatherid",selectedCounty.getWeatherID());
                     Intent intent =new Intent(getActivity(), WeatherActivity.class);
                     intent.putExtra("weatherid",selectedCounty.getWeatherID());
                     startActivity(intent);
@@ -281,7 +285,6 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         titletext.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        List<County> list=DataSupport.findAll(County.class);
         countyList = DataSupport.where("cityid=?", String.valueOf(selectedCity.getCityCode())).find(County.class);
 
         if (countyList.size() > 0) {

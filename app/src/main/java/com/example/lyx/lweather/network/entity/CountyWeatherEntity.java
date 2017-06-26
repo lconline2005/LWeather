@@ -9,7 +9,7 @@ import java.util.List;
  * 修改备注：
  */
 
-public class CountyWeatherEntity  implements Serializable{
+public class CountyWeatherEntity {
 
     private List<HeWeatherBean> HeWeather;
 
