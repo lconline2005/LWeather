@@ -116,6 +116,7 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCounty=countyList.get(position);
                     //保存weatherid
                     PutInfoToSP(getActivity(),"weatherid",selectedCounty.getWeatherID());
+
                     Intent intent =new Intent(getActivity(), WeatherActivity.class);
                     intent.putExtra("weatherid",selectedCounty.getWeatherID());
                     startActivity(intent);

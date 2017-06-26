@@ -41,5 +41,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.0.0-alpha1'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     compile 'com.alibaba:fastjson:1.2.33'
-    compile 'com.alibaba:fastjson:1.2.33'
+    compile 'com.android.support:design:26.0.0-alpha1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }

@@ -1,9 +1,17 @@
 package com.example.lyx.lweather.activity;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +22,7 @@ import com.example.lyx.lweather.adapter.DailyRecyclerAdapter;
 import com.example.lyx.lweather.network.entity.CountyWeatherEntity;
 import com.example.lyx.lweather.network.service.IHeaderImageService;
 import com.example.lyx.lweather.network.service.IWeatherService;
+import com.example.lyx.lweather.utils.DoubleClickExit;
 import com.example.lyx.lweather.utils.LogUtil;
 import com.example.lyx.lweather.utils.Params;
 
@@ -38,21 +47,27 @@ import static com.example.lyx.lweather.utils.Utility.PutInfoToSP;
 import static com.example.lyx.lweather.utils.Utility.SaveByFastJson;
 import static com.example.lyx.lweather.utils.Utility.getBeanByFastJson;
 
-public class WeatherActivity extends BaseActivity {
+public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private final String TAG = "WeatherActivity";
-    private TextView tempNow, windDir, windSc,condText;
-    private TextView titleCountyName,titleUpdateTime,apiText,pm25Text,airqulText;
+    NavigationView navView;
+    ImageButton chooseButton;
+    private TextView tempNow, windDir, windSc, condText;
+    private TextView titleCountyName, titleUpdateTime, apiText, pm25Text, airqulText;
     private TextView comfortContent, washcarContent, dressContent, sportContent, hufuContent;
     private SwipeRefreshLayout swipeRefreshLayout;
+    DrawerLayout weatherDrawerLayout;
     ImageView headerImage;
     RecyclerView dailyRecycler;
     List<CountyWeatherEntity.HeWeatherBean.DailyForecastBean> listDailyWeather;
+    String intentWeatherid;//intent里面的weatherid
+    String weatherId;//SP里面的weatherid
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        fingViews();
+        findViews();
         //判断header背景图url是否存在SP
         if (GetInfoFromSP(this, "imageurl") != null) {
             Glide.with(this).load(GetInfoFromSP(this, "imageurl")).placeholder(R.mipmap.headback).into(headerImage);
@@ -61,24 +76,30 @@ public class WeatherActivity extends BaseActivity {
         }
         //判断天气信息是否存在SP
         Object prefWeather = getBeanByFastJson(WeatherActivity.this, "weather", CountyWeatherEntity.class);
+        weatherId = GetInfoFromSP(this, "weatherid");
+        intentWeatherid=(getIntent().getStringExtra("weatherid"));
         if (prefWeather != null) {
-            CountyWeatherEntity countyWeather = (CountyWeatherEntity) prefWeather;
-            ShowWeatherInfo(countyWeather);
-        } else {
-            RequestWeather(getIntent().getStringExtra("weatherid"));
-        }
-        //下拉刷新
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                RequestWeather(GetInfoFromSP(WeatherActivity.this,"weatherid"));
-                GetHeaderImage();
+            if (intentWeatherid != null) {
+                RequestWeather(intentWeatherid);
+            } else {
+                CountyWeatherEntity countyWeather = (CountyWeatherEntity) prefWeather;
+                ShowWeatherInfo(countyWeather);
             }
-        });
+        } else {
+            RequestWeather(intentWeatherid);
+        }
+
     }
 
 
-    public void fingViews() {
+    public void findViews() {
+        //侧边栏
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        chooseButton = (ImageButton) findViewById(R.id.showNav);
+        chooseButton.setOnClickListener(this);
+
+        navView.setNavigationItemSelectedListener(this);
+        weatherDrawerLayout = (DrawerLayout) findViewById(R.id.activity_weather);
         headerImage = (ImageView) findViewById(R.id.headerimage);
         dailyRecycler = (RecyclerView) findViewById(R.id.dailyrecycler);
         //suggestion
@@ -89,18 +110,26 @@ public class WeatherActivity extends BaseActivity {
         hufuContent = (TextView) findViewById(R.id.hufu_content);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.weatherrefresh);
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.toolbarbackground));
+        //下拉刷新
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                RequestWeather(GetInfoFromSP(WeatherActivity.this, "weatherid"));
+                GetHeaderImage();
+            }
+        });
         //title
-        titleCountyName= (TextView) findViewById(R.id.countyname);
-        titleUpdateTime= (TextView) findViewById(R.id.updatetime_text);
+        titleCountyName = (TextView) findViewById(R.id.countyname);
+        titleUpdateTime = (TextView) findViewById(R.id.updatetime_text);
         //airqulty
-        apiText= (TextView) findViewById(R.id.aqi_text);
-        pm25Text= (TextView) findViewById(R.id.pm25_text);
-        airqulText= (TextView) findViewById(R.id.airqul_text);
+        apiText = (TextView) findViewById(R.id.aqi_text);
+        pm25Text = (TextView) findViewById(R.id.pm25_text);
+        airqulText = (TextView) findViewById(R.id.airqul_text);
         //header
-        tempNow= (TextView) findViewById(R.id.temp_text);
+        tempNow = (TextView) findViewById(R.id.temp_text);
         windDir = (TextView) findViewById(R.id.winddir_text);
         windSc = (TextView) findViewById(R.id.windsc_text);
-        condText= (TextView) findViewById(R.id.cond_text);
+        condText = (TextView) findViewById(R.id.cond_text);
     }
 
 
@@ -129,7 +158,6 @@ public class WeatherActivity extends BaseActivity {
                 Toast.makeText(WeatherActivity.this, "天气信息加载失败", Toast.LENGTH_SHORT).show();
             }
         });
-//        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void GetHeaderImage() {
@@ -165,21 +193,20 @@ public class WeatherActivity extends BaseActivity {
         titleCountyName.setText(weatherInfo.getHeWeather().get(0).getBasic().getCity());
         titleUpdateTime.setText(weatherInfo.getHeWeather().get(0).getBasic().getUpdate().getUtc());
 
-
         //显示空气指数
         apiText.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getAqi());
         pm25Text.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getPm25());
-        String qulty=weatherInfo.getHeWeather().get(0).getAqi().getCity().getQlty();
-        airqulText.setText("空气质量："+qulty);
+        String qulty = weatherInfo.getHeWeather().get(0).getAqi().getCity().getQlty();
+        airqulText.setText("空气质量：" + qulty);
         /*可增加根据空气质量改变字体颜色*/
 //        if (qulty.equals("优")) {
 //        } else if (qulty.equals("良")) {
 //        }
 
         //显示header
-        tempNow.setText(weatherInfo.getHeWeather().get(0).getNow().getTmp()+"℃");
+        tempNow.setText(weatherInfo.getHeWeather().get(0).getNow().getTmp() + "℃");
         windDir.setText(weatherInfo.getHeWeather().get(0).getNow().getWind().getDir());
-        windSc.setText(weatherInfo.getHeWeather().get(0).getNow().getWind().getSc()+"级");
+        windSc.setText(weatherInfo.getHeWeather().get(0).getNow().getWind().getSc() + "级");
         condText.setText(weatherInfo.getHeWeather().get(0).getNow().getCond().getTxt());
 
         //显示一周天气预报
@@ -198,22 +225,74 @@ public class WeatherActivity extends BaseActivity {
         hufuContent.setText(weatherInfo.getHeWeather().get(0).getSuggestion().getUv().getTxt());
     }
 
-    public String getUpdateTime(String dateYear){
-        Date date=null;
+
+    //侧边栏
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_loac:
+                break;
+            case R.id.nav_city:
+                Intent intent = new Intent(this, ChooseCityActivity.class);
+                startActivity(intent);
+                this.finish();
+                break;
+            case R.id.nav_multi_cities:
+                break;
+            case R.id.nav_set:
+                break;
+            case R.id.nav_about:
+                break;
+
+        }
+        return false;
+    }
+
+    //点击事件
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.showNav:
+                weatherDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+        }
+
+    }
+
+
+    //退出
+    @Override
+    public void onBackPressed() {
+        if (weatherDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            weatherDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (!DoubleClickExit.check()) {
+                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+            }
+        }
+    }
+
+
+    public String getUpdateTime(String dateYear) {
+        Date date = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String monthDay=null;
+        String monthDay = null;
         try {
-            date=sdf.parse(dateYear);
+            date = sdf.parse(dateYear);
             // 获取日期实例
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             //月份是从0开始
-            int month=calendar.get(Calendar.MONTH)+1;
+            int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
-            monthDay=month+"-"+day;
+            monthDay = month + "-" + day;
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return monthDay;
     }
+
+
 }
