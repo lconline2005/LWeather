@@ -281,7 +281,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="舒适度:" />
+                            android:text="舒适指数:" />
 
                         <TextView
                             android:id="@+id/comfort_content"
@@ -321,7 +321,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="着装推荐:" />
+                            android:text="穿衣指数:" />
 
                         <TextView
                             android:id="@+id/dress_content"
@@ -361,7 +361,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="护肤推荐:" />
+                            android:text="防晒指数:" />
 
                         <TextView
                             android:id="@+id/hufu_content"

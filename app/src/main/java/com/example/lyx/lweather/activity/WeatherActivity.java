@@ -22,6 +22,7 @@ import com.example.lyx.lweather.adapter.DailyRecyclerAdapter;
 import com.example.lyx.lweather.network.entity.CountyWeatherEntity;
 import com.example.lyx.lweather.network.service.IHeaderImageService;
 import com.example.lyx.lweather.network.service.IWeatherService;
+import com.example.lyx.lweather.network.service.WeatherUpdateService;
 import com.example.lyx.lweather.utils.DoubleClickExit;
 import com.example.lyx.lweather.utils.LogUtil;
 import com.example.lyx.lweather.utils.Params;
@@ -88,7 +89,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         } else {
             RequestWeather(intentWeatherid);
         }
-
+        StartAutoUpdate();
     }
 
 
@@ -177,27 +178,33 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                         .placeholder(R.mipmap.headback)
                         .into(headerImage);
                 PutInfoToSP(WeatherActivity.this, "imageurl", response.body());
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 t.printStackTrace();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
-        swipeRefreshLayout.setRefreshing(false);
+
     }
 
 
     public void ShowWeatherInfo(CountyWeatherEntity weatherInfo) {
+
+
         //显示title
         titleCountyName.setText(weatherInfo.getHeWeather().get(0).getBasic().getCity());
         titleUpdateTime.setText(weatherInfo.getHeWeather().get(0).getBasic().getUpdate().getUtc());
 
+
+        //6.27后接口数据没有了aqi
         //显示空气指数
-        apiText.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getAqi());
-        pm25Text.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getPm25());
-        String qulty = weatherInfo.getHeWeather().get(0).getAqi().getCity().getQlty();
-        airqulText.setText("空气质量：" + qulty);
+//        apiText.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getAqi());
+//        pm25Text.setText(weatherInfo.getHeWeather().get(0).getAqi().getCity().getPm25());
+//        String qulty = weatherInfo.getHeWeather().get(0).getAqi().getCity().getQlty();
+//        airqulText.setText("空气质量：" + qulty);
         /*可增加根据空气质量改变字体颜色*/
 //        if (qulty.equals("优")) {
 //        } else if (qulty.equals("良")) {
@@ -294,5 +301,10 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         return monthDay;
     }
 
+    //开启自动更新服务
+    public void StartAutoUpdate(){
+        Intent intent=new Intent(this, WeatherUpdateService.class);
+        startService(intent);
+    }
 
 }

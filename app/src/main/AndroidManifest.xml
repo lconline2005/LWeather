@@ -19,7 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.WeatherActivity" />
-        <activity android:name=".activity.ChooseCityActivity"></activity>
+        <activity android:name=".activity.ChooseCityActivity" />
+
+        <service
+            android:name=".network.service.WeatherUpdateService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
