@@ -68,7 +68,7 @@ public class WeatherUpdateService extends Service {
     //事件设定
     public void UpdateTime() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        long triggerAtTime = SystemClock.elapsedRealtime() + 60 * 60 * 1000 * 6;//设定为6个小时
+        long triggerAtTime = SystemClock.elapsedRealtime() +  60*60 * 1000 ;//设定为6个小时
         Intent i = new Intent(this, UpdateReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
@@ -97,7 +97,7 @@ public class WeatherUpdateService extends Service {
         call.enqueue(new Callback<CountyWeatherEntity>() {
             @Override
             public void onResponse(Call<CountyWeatherEntity> call, Response<CountyWeatherEntity> response) {
-                LogUtil.d(TAG, "weatherresponse==>" + response.body());
+                LogUtil.d(TAG, "weather数据通过service刷新了==>" + response.body());
                 //取到的数据直接存到sharedPreference
                 Boolean isSaved = SaveByFastJson(getApplicationContext(), "weather", response.body());
                 ShowNotification(response.body());
