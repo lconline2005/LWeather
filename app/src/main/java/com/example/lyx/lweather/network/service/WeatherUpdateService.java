@@ -29,6 +29,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.example.lyx.lweather.utils.Params.BASE_URL;
+import static com.example.lyx.lweather.utils.Params.SPWEATHERIDKEY;
+import static com.example.lyx.lweather.utils.Params.SPWEATHERKEY;
 import static com.example.lyx.lweather.utils.Params.WEATHERPROKEY;
 import static com.example.lyx.lweather.utils.Utility.GetInfoFromSP;
 import static com.example.lyx.lweather.utils.Utility.SaveByFastJson;
@@ -37,6 +39,7 @@ import static com.example.lyx.lweather.utils.Utility.getBeanByFastJson;
 public class WeatherUpdateService extends Service {
     public static final String TAG = "WeatherUpdateService";
     public static final String ACTION_UPDATE = "update";
+    public static final String ACTION_NOTIFICATION = "updatenotification";
     RemoteViews remoteViews;//自定义notification
     Notification notification;
     UpdateReceiver updateReceiver;
@@ -68,7 +71,7 @@ public class WeatherUpdateService extends Service {
     //事件设定
     public void UpdateTime() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        long triggerAtTime = SystemClock.elapsedRealtime() +  60*60 * 1000 ;//设定为6个小时
+        long triggerAtTime = SystemClock.elapsedRealtime() + 60 * 60 * 1000;//设定为6个小时
         Intent i = new Intent(this, UpdateReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
@@ -77,7 +80,7 @@ public class WeatherUpdateService extends Service {
 
     //更新weather并传到sharedprefrences
     public void UpdateSPWeather() {
-        String weatherid = GetInfoFromSP(this, "weatherid");
+        String weatherid = GetInfoFromSP(this, SPWEATHERIDKEY);
         RequestWeather(weatherid);
 
 //        CountyWeatherEntity weatherEntity = getBeanByFastJson(getApplicationContext(), "weather", CountyWeatherEntity.class);
@@ -99,7 +102,7 @@ public class WeatherUpdateService extends Service {
             public void onResponse(Call<CountyWeatherEntity> call, Response<CountyWeatherEntity> response) {
                 LogUtil.d(TAG, "weather数据通过service刷新了==>" + response.body());
                 //取到的数据直接存到sharedPreference
-                Boolean isSaved = SaveByFastJson(getApplicationContext(), "weather", response.body());
+                Boolean isSaved = SaveByFastJson(getApplicationContext(), SPWEATHERKEY, response.body());
                 ShowNotification(response.body());
             }
 
@@ -118,6 +121,15 @@ public class WeatherUpdateService extends Service {
         intentFilter.addAction(ACTION_UPDATE);
         registerReceiver(updateReceiver, intentFilter);
     }
+
+    //更新notification
+    public void UpdateNotificaiton(){
+        Object prefWeather = getBeanByFastJson(this, SPWEATHERKEY, CountyWeatherEntity.class);
+        if (prefWeather!=null) {
+            ShowNotification((CountyWeatherEntity) prefWeather);
+        }
+    }
+
 
 
     //将数据展示到notification
@@ -138,11 +150,11 @@ public class WeatherUpdateService extends Service {
                 .setSmallIcon(getIcon(weatherCode));
 
 
-        remoteViews.setTextViewText(R.id.cityname_noti,cityName);
-        remoteViews.setTextViewText(R.id.nowtemp_noti,temp+"℃");
-        remoteViews.setTextViewText(R.id.weatherword_noti,cityWeather);
-        remoteViews.setTextViewText(R.id.updatetime_noti,updateTime);
-        remoteViews.setImageViewResource(R.id.weathericon_noti,getIcon(weatherCode));
+        remoteViews.setTextViewText(R.id.cityname_noti, cityName);
+        remoteViews.setTextViewText(R.id.nowtemp_noti, temp + "℃");
+        remoteViews.setTextViewText(R.id.weatherword_noti, cityWeather);
+        remoteViews.setTextViewText(R.id.updatetime_noti, updateTime);
+        remoteViews.setImageViewResource(R.id.weathericon_noti, getIcon(weatherCode));
 
 
         //点击notification跳转程序
@@ -159,78 +171,83 @@ public class WeatherUpdateService extends Service {
 
     //根据weathercode选择天气图标
     public int getIcon(String weathercode) {
-        switch (Integer.valueOf(weathercode)) {
-            case 100:
-                return R.mipmap.sun;
-            case 101:
-                return R.mipmap.cloud;
-            case 102:
-                return R.mipmap.cloud;
-            case 103:
-                return R.mipmap.cloudly;
-            case 104:
-                return R.mipmap.cloud;
-            case 300:
-                return R.mipmap.rain;
-            case 211:
-                return R.mipmap.hurri;
-            case 212:
-                return R.mipmap.hurri;
-            case 213:
-                return R.mipmap.hurri;
-            case 301:
-                return R.mipmap.heavyrain;
-            case 302:
-                return R.mipmap.rainwithlight;
-            case 303:
-                return R.mipmap.rainwithlight;
-            case 304:
-                return R.mipmap.raintiwhhail;
-            case 305:
-                return R.mipmap.lightrain;
-            case 306:
-                return R.mipmap.rain;
-            case 307:
-                return R.mipmap.heavyrain;
-            case 308:
-                return R.mipmap.heavyrain;
-            case 309:
-                return R.mipmap.lightrain;
-            case 310:
-                return R.mipmap.heavyrain;
-            case 311:
-                return R.mipmap.heavyrain;
-            case 312:
-                return R.mipmap.heavyrain;
-            case 313:
-                return R.mipmap.sleet;
-            case 400:
-                return R.mipmap.lightsnow;
-            case 401:
-                return R.mipmap.snow;
-            case 402:
-                return R.mipmap.heavysnow;
-            case 403:
-                return R.mipmap.heavysnow;
-            case 404:
-                return R.mipmap.sleet;
-            case 405:
-                return R.mipmap.sleet;
-            case 406:
-                return R.mipmap.sleet;
-            case 407:
-                return R.mipmap.sleet;
-            case 500:
-                return R.mipmap.frog;
-            case 501:
-                return R.mipmap.frog;
-            case 502:
-                return R.mipmap.frog;
-            case 503:
-                return R.mipmap.frog;
-            default:
-                return R.mipmap.icon;
+        if (weathercode!=null){
+            switch (Integer.valueOf(weathercode)) {
+                case 100:
+                    return R.mipmap.sun;
+                case 101:
+                    return R.mipmap.cloud;
+                case 102:
+                    return R.mipmap.cloud;
+                case 103:
+                    return R.mipmap.cloudly;
+                case 104:
+                    return R.mipmap.cloud;
+                case 300:
+                    return R.mipmap.rain;
+                case 211:
+                    return R.mipmap.hurri;
+                case 212:
+                    return R.mipmap.hurri;
+                case 213:
+                    return R.mipmap.hurri;
+                case 301:
+                    return R.mipmap.heavyrain;
+                case 302:
+                    return R.mipmap.rainwithlight;
+                case 303:
+                    return R.mipmap.rainwithlight;
+                case 304:
+                    return R.mipmap.raintiwhhail;
+                case 305:
+                    return R.mipmap.lightrain;
+                case 306:
+                    return R.mipmap.rain;
+                case 307:
+                    return R.mipmap.heavyrain;
+                case 308:
+                    return R.mipmap.heavyrain;
+                case 309:
+                    return R.mipmap.lightrain;
+                case 310:
+                    return R.mipmap.heavyrain;
+                case 311:
+                    return R.mipmap.heavyrain;
+                case 312:
+                    return R.mipmap.heavyrain;
+                case 313:
+                    return R.mipmap.sleet;
+                case 400:
+                    return R.mipmap.lightsnow;
+                case 401:
+                    return R.mipmap.snow;
+                case 402:
+                    return R.mipmap.heavysnow;
+                case 403:
+                    return R.mipmap.heavysnow;
+                case 404:
+                    return R.mipmap.sleet;
+                case 405:
+                    return R.mipmap.sleet;
+                case 406:
+                    return R.mipmap.sleet;
+                case 407:
+                    return R.mipmap.sleet;
+                case 500:
+                    return R.mipmap.frog;
+                case 501:
+                    return R.mipmap.frog;
+                case 502:
+                    return R.mipmap.frog;
+                case 503:
+                    return R.mipmap.frog;
+                default:
+                    return R.mipmap.icon;
+            }
+        }else {
+            return R.mipmap.icon;
         }
+
     }
 
 
@@ -238,13 +255,14 @@ public class WeatherUpdateService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
             Intent i = new Intent(context, WeatherUpdateService.class);
             context.startService(i);
 
-//            String action = intent.getAction();
-//            if (action.equals(ACTION_UPDATE)) {
-//                UpdateSPWeather();
-//            }
+
+            if (action.equals(ACTION_NOTIFICATION)) {
+                UpdateNotificaiton();
+            }
         }
     }
 

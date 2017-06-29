@@ -25,13 +25,19 @@ import com.example.lyx.lweather.R;
 import com.example.lyx.lweather.adapter.DailyRecyclerAdapter;
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
+import com.example.lyx.lweather.dbase.Province;
+import com.example.lyx.lweather.network.entity.CityEntity;
+import com.example.lyx.lweather.network.entity.CountyEntity;
 import com.example.lyx.lweather.network.entity.CountyWeatherEntity;
+import com.example.lyx.lweather.network.service.ICityService;
+import com.example.lyx.lweather.network.service.ICountyService;
 import com.example.lyx.lweather.network.service.IHeaderImageService;
 import com.example.lyx.lweather.network.service.IWeatherService;
 import com.example.lyx.lweather.network.service.WeatherUpdateService;
 import com.example.lyx.lweather.utils.DoubleClickExit;
 import com.example.lyx.lweather.utils.LogUtil;
 import com.example.lyx.lweather.utils.Params;
+import com.example.lyx.lweather.utils.Utility;
 
 import org.litepal.crud.DataSupport;
 
@@ -45,8 +51,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static com.example.lyx.lweather.network.service.WeatherUpdateService.ACTION_NOTIFICATION;
 import static com.example.lyx.lweather.utils.Params.BASE_URL;
+import static com.example.lyx.lweather.utils.Params.SPWEATHERIDKEY;
+import static com.example.lyx.lweather.utils.Params.SPWEATHERKEY;
 import static com.example.lyx.lweather.utils.Params.WEATHERPROKEY;
+import static com.example.lyx.lweather.utils.Utility.GPSCountyResponse;
 import static com.example.lyx.lweather.utils.Utility.GetInfoFromSP;
 import static com.example.lyx.lweather.utils.Utility.PutInfoToSP;
 import static com.example.lyx.lweather.utils.Utility.SaveByFastJson;
@@ -82,9 +92,9 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             GetHeaderImage();
         }
         //判断天气信息是否存在SP
-        Object prefWeather = getBeanByFastJson(WeatherActivity.this, "weather", CountyWeatherEntity.class);
-        weatherId = GetInfoFromSP(this, "weatherid");
-        intentWeatherid = (getIntent().getStringExtra("weatherid"));
+        Object prefWeather = getBeanByFastJson(WeatherActivity.this, SPWEATHERKEY, CountyWeatherEntity.class);
+        weatherId = GetInfoFromSP(this, SPWEATHERIDKEY);
+        intentWeatherid = (getIntent().getStringExtra(SPWEATHERIDKEY));
         if (prefWeather != null) {
             if (intentWeatherid != null) {
                 RequestWeather(intentWeatherid);
@@ -156,8 +166,9 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 //显示数据
                 ShowWeatherInfo(response.body());
                 //存到sharedPreference
-                Boolean isSaved = SaveByFastJson(WeatherActivity.this, "weather", response.body());
-
+                Boolean isSaved = SaveByFastJson(WeatherActivity.this, SPWEATHERKEY, response.body());
+                Intent intent = new Intent(ACTION_NOTIFICATION);
+                sendBroadcast(intent);
             }
 
             @Override
@@ -198,9 +209,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
 
     public void ShowWeatherInfo(CountyWeatherEntity weatherInfo) {
-        if (weatherDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            weatherDrawerLayout.closeDrawer(GravityCompat.START);
-        }
 
         //显示title
         titleCountyName.setText(weatherInfo.getHeWeather().get(0).getBasic().getCity());
@@ -297,29 +305,15 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     }
 
 
-    //获取当前city下的所有county
-    public String GetCountyWeatherId(String cityName) {
-        String weatherId = null;
-        List<City> city=DataSupport.where("cityname=?", cityName).find(City.class);
-        int cityid=city.get(0).getCityCode();
-        countyList = DataSupport.where("cityid=?", String.valueOf(cityid)).find(County.class);
-        if (countyList.size() > 0) {
-            weatherId = countyList.get(0).getWeatherID();
-            for (int i = 0; i < countyList.size(); i++) {
-                if (countyList.get(i).getCountyName().equals(cityName)) {
-                    weatherId = countyList.get(i).getWeatherID();
-                }
-            }
-        }
-        if (weatherId!=null) {
-            PutInfoToSP(this,"weatherid",weatherId);
-        }
-        return weatherId;
-    }
+
 
 
     //定位当前位置
     public void GetGPSPlace() {
+        //关闭侧滑栏
+        if (weatherDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            weatherDrawerLayout.closeDrawer(GravityCompat.START);
+        }
         if (null == locationOption) {
             locationOption = new AMapLocationClientOption();
         }
@@ -331,7 +325,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     /**
      * 开始定位
      *
-     * @author hongming.wang
+     * @author
      * @since 2.8.0
      */
     private void startLocation() {
@@ -346,7 +340,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     /**
      * 停止定位
      *
-     * @author hongming.wang
+     * @author
      * @since 2.8.0
      */
     private void stopLocation() {
@@ -357,7 +351,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     /**
      * 销毁定位
      *
-     * @author hongming.wang
+     * @author
      * @since 2.8.0
      */
     private void destroyLocation() {
@@ -415,9 +409,9 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                     sb.append("市            : " + location.getCity() + "\n");
                     sb.append("城市编码 : " + location.getCityCode() + "\n");
                     sb.append("区            : " + location.getDistrict() + "\n");
-                    sb.append("区域 码   : " + location.getAdCode() + "\n");
-                    sb.append("地    址    : " + location.getAddress() + "\n");
-                    sb.append("兴趣点    : " + location.getPoiName() + "\n");
+//                    sb.append("区域 码   : " + location.getAdCode() + "\n");
+//                    sb.append("地    址    : " + location.getAddress() + "\n");
+//                    sb.append("兴趣点    : " + location.getPoiName() + "\n");
                     //定位完成的时间
 //                    sb.append("定位时间: " + Utils.formatUTC(location.getTime(), "yyyy-MM-dd HH:mm:ss") + "\n");
 
@@ -436,30 +430,113 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 LogUtil.d(TAG, "定位result为==>：" + result);
 //                Toast.makeText(WeatherActivity.this, TAG + "定位地址为" + result, Toast.LENGTH_SHORT).show();
                 stopLocation();
+                String provinceName = GetClearName(location.getProvince());
+                String cityName = GetClearName(location.getCity());
+                String countyName=GetClearName(location.getDistrict());
 
-                String cityName =GetClearName(location.getCity());
-                String GPSWeatherId = GetCountyWeatherId(cityName);
+
+                String GPSWeatherId = GetCountyWeatherId(provinceName,cityName,countyName);
                 RequestWeather(GPSWeatherId);
-//                tvResult.setText(result);
             } else {
-//                tvResult.setText("定位失败，loc is null");
                 Toast.makeText(WeatherActivity.this, TAG + "定位失败", Toast.LENGTH_SHORT).show();
                 stopLocation();
             }
         }
     };
 
-    private String GetClearName(String cityname) {
-        String removeSheng="省";
-        String removeShi="市";
-        String removeQu="区";
-        String removeXian="县";
-        String cityName=null;
+    //获取当前city下的所有county
+    public String GetCountyWeatherId(String provincename, String cityName,String countyName) {
+        String weatherId = null;
+        List<City> city = DataSupport.where("cityname=?", cityName).find(City.class);
+        if (city.size()>0) {
+            int cityid = city.get(0).getCityCode();
+            countyList = DataSupport.where("cityid=?", String.valueOf(cityid)).find(County.class);
+            if (countyList.size() > 0) {
+                weatherId = countyList.get(0).getWeatherID();
+                for (int i = 0; i < countyList.size(); i++) {
+                    if (countyList.get(i).getCountyName().equals(cityName)) {
+                        weatherId = countyList.get(i).getWeatherID();
+                    }
+                }
+            }
+            if (weatherId != null) {
+                PutInfoToSP(this, SPWEATHERIDKEY, weatherId);
+            }
+        } else {
+            // TODO 数据库中不存在时的处理
 
-        cityName=cityname.replace(removeSheng,"");
-        cityName=cityName.replace(removeShi,"");
-        cityName=cityName.replace(removeQu,"");
-        cityName=cityName.replace(removeXian,"");
+            List<Province> provinces=DataSupport.where("provincename=?", provincename).find(Province.class);
+            int provinceId=provinces.get(0).getProvinceCode();
+             queryFromServer(provinceId,cityName,countyName);
+        }
+        return weatherId;
+    }
+
+    //获取省市县数据
+    public void queryFromServer(int provinceid,String cityname,String countyname) {
+        // 构建做好相关配置的 OkHttpClient 对象
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Params.BASE_URL)
+                .client(new OkHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+            cityFromServer(retrofit, provinceid,cityname,countyname);
+    }
+
+
+
+    //定位时如果数据库中不存在时取city信息
+    public void cityFromServer(final Retrofit retrofit, final int provinceId, final String cityname,final String countyname) {
+        ICityService CityService = retrofit.create(ICityService.class);
+        Call<List<CityEntity>> call = CityService.getCity(provinceId);
+        call.enqueue(new Callback<List<CityEntity>>() {
+            @Override
+            public void onResponse(Call<List<CityEntity>> call, retrofit2.Response<List<CityEntity>> response) {
+                City city=Utility.GPSCityResponse(response.body(), provinceId,cityname);
+                int cityid=city.getCityCode();
+                //city下的counties
+                countyFromServer(retrofit,provinceId,cityid,countyname);
+            }
+
+            @Override
+            public void onFailure(Call<List<CityEntity>> call, Throwable t) {
+                call.cancel();
+            }
+        });
+    }
+    //定位时如果数据库中不存在时取county信息
+    public void countyFromServer(Retrofit retrofit, final int provinceId, final int cityId,final String countyname) {
+        ICountyService CountyService = retrofit.create(ICountyService.class);
+        Call<List<CountyEntity>> call = CountyService.getCounty(provinceId, cityId);
+        call.enqueue(new Callback<List<CountyEntity>>() {
+            @Override
+            public void onResponse(Call<List<CountyEntity>> call, Response<List<CountyEntity>> response) {
+                County county=GPSCountyResponse(response.body(),cityId,countyname);
+                String weatherid=county.getWeatherID();
+                RequestWeather(weatherid);
+            }
+
+            @Override
+            public void onFailure(Call<List<CountyEntity>> call, Throwable t) {
+                call.cancel();
+            }
+        });
+
+
+    }
+
+
+    private String GetClearName(String cityname) {
+        String removeSheng = "省";
+        String removeShi = "市";
+        String removeQu = "区";
+        String removeXian = "县";
+        String cityName = null;
+
+        cityName = cityname.replace(removeSheng, "");
+        cityName = cityName.replace(removeShi, "");
+        cityName = cityName.replace(removeQu, "");
+        cityName = cityName.replace(removeXian, "");
         return cityName;
     }
 

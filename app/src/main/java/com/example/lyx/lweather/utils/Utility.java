@@ -127,4 +127,51 @@ public class Utility {
         return JSON.parseObject(objString, clazz);
     }
 
+
+
+
+    /*定位city数据处理*/
+    public static City GPSCityResponse(List<CityEntity> response, int provinceId,String cityname) {
+        City selectedcity=null;
+        if (!TextUtils.isEmpty(response.toString())) {
+            for (int i = 0; i < response.size(); i++) {
+                City city = new City();
+                CityEntity cityEntity = response.get(i);
+                city.setProvinceID(provinceId);
+                city.setCityName(cityEntity.getName());
+                city.setCityCode(cityEntity.getId());
+                city.save();
+                if (i==0) {
+                    selectedcity=city;
+                } else if (city.getCityName().equals(cityname)) {
+                    selectedcity=city;
+                }
+            }
+            return selectedcity;
+        }
+        return selectedcity;
+    }
+    /*定位county数据处理*/
+    public static County GPSCountyResponse(List<CountyEntity> response, int cityId,String countyname) {
+        County selectedcounty=null;
+        if (!TextUtils.isEmpty(response.toString())) {
+            for (int i = 0; i < response.size(); i++) {
+                County county = new County();
+                CountyEntity countyEntity = response.get(i);
+                LogUtil.i(TAG, "countyEntity==>" + countyEntity.toString());
+                county.setCityID(cityId);
+                county.setCountyName(countyEntity.getName());
+                county.setWeatherID(countyEntity.getWeather_id());
+                county.save();
+                if (i==0) {
+                    selectedcounty=county;
+                } else if (county.getCountyName().equals(countyname)) {
+                    selectedcounty=county;
+                }
+            }
+            return selectedcounty;
+        }
+        return selectedcounty;
+    }
+
 }
