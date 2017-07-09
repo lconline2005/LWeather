@@ -49,7 +49,6 @@ public class Utility {
         return false;
     }
 
-
     /*city数据处理*/
     public static boolean handleCityResponse(List<CityEntity> response, int provinceId) {
         if (!TextUtils.isEmpty(response.toString())) {

@@ -71,7 +71,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     private TextView comfortContent, washcarContent, dressContent, sportContent, hufuContent;
     private SwipeRefreshLayout swipeRefreshLayout;
     DrawerLayout weatherDrawerLayout;
-    ImageView headerImage;
+    ImageView headerImage,condImage;
     RecyclerView dailyRecycler;
     List<CountyWeatherEntity.HeWeatherBean.DailyForecastBean> listDailyWeather;
     String intentWeatherid;//intent里面的weatherid
@@ -119,6 +119,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         weatherDrawerLayout = (DrawerLayout) findViewById(R.id.activity_weather);
         headerImage = (ImageView) findViewById(R.id.headerimage);
         dailyRecycler = (RecyclerView) findViewById(R.id.dailyrecycler);
+        condImage= (ImageView) findViewById(R.id.cond_image);
         //suggestion
         comfortContent = (TextView) findViewById(R.id.comfort_content);
         washcarContent = (TextView) findViewById(R.id.washcar_content);
@@ -232,7 +233,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         windDir.setText(weatherInfo.getHeWeather().get(0).getNow().getWind().getDir());
         windSc.setText(weatherInfo.getHeWeather().get(0).getNow().getWind().getSc() + "级");
         condText.setText(weatherInfo.getHeWeather().get(0).getNow().getCond().getTxt());
-
+        condImage.setImageResource(getIcon(weatherInfo.getHeWeather().get(0).getNow().getCond().getCode()));
         //显示一周天气预报
         listDailyWeather = weatherInfo.getHeWeather().get(0).getDaily_forecast();
         dailyRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -306,7 +307,86 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
 
 
 
+    //根据weathercode选择天气图标
+    public int getIcon(String weathercode) {
+        if (weathercode!=null){
+            switch (Integer.valueOf(weathercode)) {
+                case 100:
+                    return R.mipmap.sun;
+                case 101:
+                    return R.mipmap.cloud;
+                case 102:
+                    return R.mipmap.cloud;
+                case 103:
+                    return R.mipmap.cloudly;
+                case 104:
+                    return R.mipmap.cloud;
+                case 300:
+                    return R.mipmap.rain;
+                case 211:
+                    return R.mipmap.hurri;
+                case 212:
+                    return R.mipmap.hurri;
+                case 213:
+                    return R.mipmap.hurri;
+                case 301:
+                    return R.mipmap.heavyrain;
+                case 302:
+                    return R.mipmap.rainwithlight;
+                case 303:
+                    return R.mipmap.rainwithlight;
+                case 304:
+                    return R.mipmap.raintiwhhail;
+                case 305:
+                    return R.mipmap.lightrain;
+                case 306:
+                    return R.mipmap.rain;
+                case 307:
+                    return R.mipmap.heavyrain;
+                case 308:
+                    return R.mipmap.heavyrain;
+                case 309:
+                    return R.mipmap.lightrain;
+                case 310:
+                    return R.mipmap.heavyrain;
+                case 311:
+                    return R.mipmap.heavyrain;
+                case 312:
+                    return R.mipmap.heavyrain;
+                case 313:
+                    return R.mipmap.sleet;
+                case 400:
+                    return R.mipmap.lightsnow;
+                case 401:
+                    return R.mipmap.snow;
+                case 402:
+                    return R.mipmap.heavysnow;
+                case 403:
+                    return R.mipmap.heavysnow;
+                case 404:
+                    return R.mipmap.sleet;
+                case 405:
+                    return R.mipmap.sleet;
+                case 406:
+                    return R.mipmap.sleet;
+                case 407:
+                    return R.mipmap.sleet;
+                case 500:
+                    return R.mipmap.frog;
+                case 501:
+                    return R.mipmap.frog;
+                case 502:
+                    return R.mipmap.frog;
+                case 503:
+                    return R.mipmap.frog;
+                default:
+                    return R.mipmap.icon;
+            }
+        }else {
+            return R.mipmap.icon;
+        }
 
+    }
 
     //定位当前位置
     public void GetGPSPlace() {
@@ -435,8 +515,9 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 String countyName=GetClearName(location.getDistrict());
 
 
-                String GPSWeatherId = GetCountyWeatherId(provinceName,cityName,countyName);
-                RequestWeather(GPSWeatherId);
+//                String GPSWeatherId = GetCountyWeatherId(provinceName,cityName,countyName);
+//                RequestWeather(GPSWeatherId);
+                GetCountyWeatherId(provinceName,cityName,countyName);
             } else {
                 Toast.makeText(WeatherActivity.this, TAG + "定位失败", Toast.LENGTH_SHORT).show();
                 stopLocation();
@@ -445,7 +526,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     };
 
     //获取当前city下的所有county
-    public String GetCountyWeatherId(String provincename, String cityName,String countyName) {
+    public void GetCountyWeatherId(String provincename, String cityName,String countyName) {
         String weatherId = null;
         List<City> city = DataSupport.where("cityname=?", cityName).find(City.class);
         if (city.size()>0) {
@@ -461,6 +542,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             }
             if (weatherId != null) {
                 PutInfoToSP(this, SPWEATHERIDKEY, weatherId);
+                RequestWeather(weatherId);
             }
         } else {
             // TODO 数据库中不存在时的处理
@@ -469,7 +551,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             int provinceId=provinces.get(0).getProvinceCode();
              queryFromServer(provinceId,cityName,countyName);
         }
-        return weatherId;
     }
 
     //获取省市县数据
@@ -513,6 +594,7 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
             public void onResponse(Call<List<CountyEntity>> call, Response<List<CountyEntity>> response) {
                 County county=GPSCountyResponse(response.body(),cityId,countyname);
                 String weatherid=county.getWeatherID();
+                PutInfoToSP(WeatherActivity.this, Params.SPWEATHERIDKEY, weatherid);
                 RequestWeather(weatherid);
             }
 
