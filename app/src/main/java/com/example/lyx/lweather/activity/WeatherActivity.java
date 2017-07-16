@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -61,8 +62,9 @@ import static com.example.lyx.lweather.utils.Utility.GetInfoFromSP;
 import static com.example.lyx.lweather.utils.Utility.PutInfoToSP;
 import static com.example.lyx.lweather.utils.Utility.SaveByFastJson;
 import static com.example.lyx.lweather.utils.Utility.getBeanByFastJson;
+import static com.example.lyx.lweather.utils.Utility.getIcon;
 
-public class WeatherActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class WeatherActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private final String TAG = "WeatherActivity";
     NavigationView navView;
     ImageButton chooseButton;
@@ -107,7 +109,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
         }
         StartAutoUpdate();
     }
-
 
     public void findViews() {
         //侧边栏
@@ -306,88 +307,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
     }
 
 
-
-    //根据weathercode选择天气图标
-    public int getIcon(String weathercode) {
-        if (weathercode!=null){
-            switch (Integer.valueOf(weathercode)) {
-                case 100:
-                    return R.mipmap.sun;
-                case 101:
-                    return R.mipmap.cloud;
-                case 102:
-                    return R.mipmap.cloud;
-                case 103:
-                    return R.mipmap.cloudly;
-                case 104:
-                    return R.mipmap.cloud;
-                case 300:
-                    return R.mipmap.rain;
-                case 211:
-                    return R.mipmap.hurri;
-                case 212:
-                    return R.mipmap.hurri;
-                case 213:
-                    return R.mipmap.hurri;
-                case 301:
-                    return R.mipmap.heavyrain;
-                case 302:
-                    return R.mipmap.rainwithlight;
-                case 303:
-                    return R.mipmap.rainwithlight;
-                case 304:
-                    return R.mipmap.raintiwhhail;
-                case 305:
-                    return R.mipmap.lightrain;
-                case 306:
-                    return R.mipmap.rain;
-                case 307:
-                    return R.mipmap.heavyrain;
-                case 308:
-                    return R.mipmap.heavyrain;
-                case 309:
-                    return R.mipmap.lightrain;
-                case 310:
-                    return R.mipmap.heavyrain;
-                case 311:
-                    return R.mipmap.heavyrain;
-                case 312:
-                    return R.mipmap.heavyrain;
-                case 313:
-                    return R.mipmap.sleet;
-                case 400:
-                    return R.mipmap.lightsnow;
-                case 401:
-                    return R.mipmap.snow;
-                case 402:
-                    return R.mipmap.heavysnow;
-                case 403:
-                    return R.mipmap.heavysnow;
-                case 404:
-                    return R.mipmap.sleet;
-                case 405:
-                    return R.mipmap.sleet;
-                case 406:
-                    return R.mipmap.sleet;
-                case 407:
-                    return R.mipmap.sleet;
-                case 500:
-                    return R.mipmap.frog;
-                case 501:
-                    return R.mipmap.frog;
-                case 502:
-                    return R.mipmap.frog;
-                case 503:
-                    return R.mipmap.frog;
-                default:
-                    return R.mipmap.icon;
-            }
-        }else {
-            return R.mipmap.icon;
-        }
-
-    }
-
     //定位当前位置
     public void GetGPSPlace() {
         //关闭侧滑栏
@@ -545,8 +464,6 @@ public class WeatherActivity extends BaseActivity implements NavigationView.OnNa
                 RequestWeather(weatherId);
             }
         } else {
-            // TODO 数据库中不存在时的处理
-
             List<Province> provinces=DataSupport.where("provincename=?", provincename).find(Province.class);
             int provinceId=provinces.get(0).getProvinceCode();
              queryFromServer(provinceId,cityName,countyName);

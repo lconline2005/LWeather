@@ -2,6 +2,7 @@ package com.example.lyx.lweather.network.service;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -21,6 +22,8 @@ import com.example.lyx.lweather.activity.WeatherActivity;
 import com.example.lyx.lweather.network.entity.CountyWeatherEntity;
 import com.example.lyx.lweather.utils.LogUtil;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +38,7 @@ import static com.example.lyx.lweather.utils.Params.WEATHERPROKEY;
 import static com.example.lyx.lweather.utils.Utility.GetInfoFromSP;
 import static com.example.lyx.lweather.utils.Utility.SaveByFastJson;
 import static com.example.lyx.lweather.utils.Utility.getBeanByFastJson;
+import static com.example.lyx.lweather.utils.Utility.getIcon;
 
 public class WeatherUpdateService extends Service {
     public static final String TAG = "WeatherUpdateService";
@@ -163,92 +167,11 @@ public class WeatherUpdateService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
+//        NotificationManager notificationManager=new NotificationManager();
 
         notification = builder.getNotification();
         startForeground(1, notification);
     }
-
-    //根据weathercode选择天气图标
-    public int getIcon(String weathercode) {
-        if (weathercode!=null){
-            switch (Integer.valueOf(weathercode)) {
-                case 100:
-                    return R.mipmap.sun;
-                case 101:
-                    return R.mipmap.cloud;
-                case 102:
-                    return R.mipmap.cloud;
-                case 103:
-                    return R.mipmap.cloudly;
-                case 104:
-                    return R.mipmap.cloud;
-                case 300:
-                    return R.mipmap.rain;
-                case 211:
-                    return R.mipmap.hurri;
-                case 212:
-                    return R.mipmap.hurri;
-                case 213:
-                    return R.mipmap.hurri;
-                case 301:
-                    return R.mipmap.heavyrain;
-                case 302:
-                    return R.mipmap.rainwithlight;
-                case 303:
-                    return R.mipmap.rainwithlight;
-                case 304:
-                    return R.mipmap.raintiwhhail;
-                case 305:
-                    return R.mipmap.lightrain;
-                case 306:
-                    return R.mipmap.rain;
-                case 307:
-                    return R.mipmap.heavyrain;
-                case 308:
-                    return R.mipmap.heavyrain;
-                case 309:
-                    return R.mipmap.lightrain;
-                case 310:
-                    return R.mipmap.heavyrain;
-                case 311:
-                    return R.mipmap.heavyrain;
-                case 312:
-                    return R.mipmap.heavyrain;
-                case 313:
-                    return R.mipmap.sleet;
-                case 400:
-                    return R.mipmap.lightsnow;
-                case 401:
-                    return R.mipmap.snow;
-                case 402:
-                    return R.mipmap.heavysnow;
-                case 403:
-                    return R.mipmap.heavysnow;
-                case 404:
-                    return R.mipmap.sleet;
-                case 405:
-                    return R.mipmap.sleet;
-                case 406:
-                    return R.mipmap.sleet;
-                case 407:
-                    return R.mipmap.sleet;
-                case 500:
-                    return R.mipmap.frog;
-                case 501:
-                    return R.mipmap.frog;
-                case 502:
-                    return R.mipmap.frog;
-                case 503:
-                    return R.mipmap.frog;
-                default:
-                    return R.mipmap.icon;
-            }
-        }else {
-            return R.mipmap.icon;
-        }
-
-    }
-
 
     public class UpdateReceiver extends BroadcastReceiver {
         @Override

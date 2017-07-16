@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.alibaba.fastjson.JSON;
+import com.example.lyx.lweather.R;
 import com.example.lyx.lweather.dbase.City;
 import com.example.lyx.lweather.dbase.County;
 import com.example.lyx.lweather.dbase.Province;
@@ -173,4 +174,87 @@ public class Utility {
         return selectedcounty;
     }
 
+
+
+
+    //根据weathercode选择天气图标
+    public static int getIcon(String weathercode) {
+        if (weathercode!=null){
+            switch (Integer.valueOf(weathercode)) {
+                case 100:
+                    return R.mipmap.sun;
+                case 101:
+                    return R.mipmap.cloud;
+                case 102:
+                    return R.mipmap.cloud;
+                case 103:
+                    return R.mipmap.cloudly;
+                case 104:
+                    return R.mipmap.cloud;
+                case 300:
+                    return R.mipmap.rain;
+                case 211:
+                    return R.mipmap.hurri;
+                case 212:
+                    return R.mipmap.hurri;
+                case 213:
+                    return R.mipmap.hurri;
+                case 301:
+                    return R.mipmap.heavyrain;
+                case 302:
+                    return R.mipmap.rainwithlight;
+                case 303:
+                    return R.mipmap.rainwithlight;
+                case 304:
+                    return R.mipmap.raintiwhhail;
+                case 305:
+                    return R.mipmap.lightrain;
+                case 306:
+                    return R.mipmap.rain;
+                case 307:
+                    return R.mipmap.heavyrain;
+                case 308:
+                    return R.mipmap.heavyrain;
+                case 309:
+                    return R.mipmap.lightrain;
+                case 310:
+                    return R.mipmap.heavyrain;
+                case 311:
+                    return R.mipmap.heavyrain;
+                case 312:
+                    return R.mipmap.heavyrain;
+                case 313:
+                    return R.mipmap.sleet;
+                case 400:
+                    return R.mipmap.lightsnow;
+                case 401:
+                    return R.mipmap.snow;
+                case 402:
+                    return R.mipmap.heavysnow;
+                case 403:
+                    return R.mipmap.heavysnow;
+                case 404:
+                    return R.mipmap.sleet;
+                case 405:
+                    return R.mipmap.sleet;
+                case 406:
+                    return R.mipmap.sleet;
+                case 407:
+                    return R.mipmap.sleet;
+                case 500:
+                    return R.mipmap.frog;
+                case 501:
+                    return R.mipmap.frog;
+                case 502:
+                    return R.mipmap.frog;
+                case 503:
+                    return R.mipmap.frog;
+                default:
+                    return R.mipmap.icon;
+            }
+        }else {
+            return R.mipmap.icon;
+        }
+
+    }
 }

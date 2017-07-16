@@ -10,6 +10,7 @@
     tools:context="com.example.lyx.lweather.activity.WeatherActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:clipToPadding="true"
         android:id="@+id/weatherrefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -17,35 +18,30 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <FrameLayout
+
+                <com.github.florent37.diagonallayout.DiagonalLayout
                     android:id="@+id/header"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:elevation="40dp"
+                    diagonal:diagonal_angle="10"
+                    diagonal:diagonal_direction="left"
+                    diagonal:diagonal_position="bottom">
 
-
-                    <com.github.florent37.diagonallayout.DiagonalLayout
+                    <ImageView
+                        android:id="@+id/headerimage"
                         android:layout_width="match_parent"
-                        android:layout_height="280dp"
-                        android:elevation="40dp"
-                        diagonal:diagonal_angle="10"
-                        diagonal:diagonal_direction="left"
-                        diagonal:diagonal_position="bottom">
-
-                        <ImageView
-                            android:id="@+id/headerimage"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop" />
-                    </com.github.florent37.diagonallayout.DiagonalLayout>
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
 
                     <RelativeLayout
+                        android:layout_marginTop="25dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -113,8 +109,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
-                                android:layout_marginRight="20dp"
                                 android:layout_below="@+id/cond_image"
+                                android:layout_marginRight="20dp"
                                 android:text="天气"
                                 android:textColor="#fff"
                                 android:textSize="20sp" />
@@ -144,8 +140,8 @@
 
 
                     </RelativeLayout>
+                </com.github.florent37.diagonallayout.DiagonalLayout>
 
-                </FrameLayout>
 
                 <TextView
                     android:id="@+id/aqititle"
